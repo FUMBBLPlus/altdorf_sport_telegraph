@@ -1,0 +1,12 @@
+[Unit]
+Description=AST League Notifications
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/python /fumbblplus/altdorf_sport_telegraph/ast_league.py
+User=adam
+
+[Install]
+WantedBy=multi-user.target
