@@ -22,15 +22,13 @@ DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
 DEFAULT_SUBJECT = 'ASL Notification'
 MESSAGE_BODY_LIMIT = 50000
 
-login_filepath = pathlib.Path(__file__).parent / 'login.json'
+rootpath = pathlib.Path(__file__).parent
 
-with open(login_filepath) as f:
+with open(rootpath / 'login.json') as f:
     _login = json.load(f)
 S.log_in(**_login)
 
-settings_filepath = pathlib.Path(__file__).parent / 'settings.json'
-
-with open(settings_filepath) as f:
+with open(rootpath / 'settings.json') as f:
     settings = json.load(f)
 
 watching_text = S.tournament.get_settings(settings["group_id"], settings["watching"])["comment"]
@@ -278,7 +276,7 @@ new_watching_text = json.dumps(
         [d for d in watching if d.get('tournamentId') is None or int(d['tournamentId']) in inProgressTournamentIds],
         indent='\t',
 )
-directory = pathlib.Path('./watching')
+directory = pathlib.Path(rootpath / 'watching')
 if new_watching_text != watching_text or not directory.exists():
     directory.mkdir(parents=True, exist_ok=True)
     with open(directory/f'watching.{now.strftime("%y%m%d.%H%M")}.json', 'w') as f:
@@ -290,7 +288,7 @@ S.tournament.set_settings_data(
 
 
 new_live_text = json.dumps([list(team_ids) for team_ids in current_matches])
-directory = pathlib.Path('./live')
+directory = pathlib.Path(rootpath / 'live')
 if new_live_text != live_text or not directory.exists():
     directory.mkdir(parents=True, exist_ok=True)
     with open(directory/f'live.{now.strftime("%y%m%d.%H%M")}.json', 'w') as f:
@@ -305,7 +303,7 @@ new_modified_text = json.dumps({
         str(tournamentId): datetimeobj.strftime(TIME_FORMAT)
         for tournamentId, datetimeobj in sorted(modified.items()) if tournamentId in inProgressTournamentIds
 }, indent='\t')
-directory = pathlib.Path('./modified')
+directory = pathlib.Path(rootpath / 'modified')
 if new_modified_text != modified_text or not directory.exists():
     directory.mkdir(parents=True, exist_ok=True)
     with open(directory/f'modified.{now.strftime("%y%m%d.%H%M")}.json', 'w') as f:
