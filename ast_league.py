@@ -22,11 +22,15 @@ DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
 DEFAULT_SUBJECT = 'ASL Notification'
 MESSAGE_BODY_LIMIT = 50000
 
-with open('login.json') as f:
+login_filepath = pathlib.Path(__file__).parent / 'login.json'
+
+with open(login_filepath) as f:
     _login = json.load(f)
 S.log_in(**_login)
 
-with open('settings.json') as f:
+settings_filepath = pathlib.Path(__file__).parent / 'settings.json'
+
+with open(settings_filepath) as f:
     settings = json.load(f)
 
 watching_text = S.tournament.get_settings(settings["group_id"], settings["watching"])["comment"]
