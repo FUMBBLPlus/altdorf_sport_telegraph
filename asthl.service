@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/python /fumbblplus/altdorf_sport_telegraph/ast.py
+ExecStart=/usr/sbin/python /fumbblplus/altdorf_sport_telegraph/asthl.py
 User=adam
 
 [Install]
