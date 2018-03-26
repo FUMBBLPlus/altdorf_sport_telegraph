@@ -22,7 +22,7 @@ MODIFIED_NAME = '<font color=red size=6><b>MODIFIED</b></font><br/>'
 EXTRA_STRIP = '⠀'
 AST_GROUP_ID = 11363
 DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
-DEFAULT_SUBJECT = 'AST Notification'
+DEFAULT_SUBJECT = 'AST Hotline'
 MESSAGE_BODY_LIMIT = 50000
 POSTPONE_TOLERANCE = datetime.timedelta(0, 900)
 

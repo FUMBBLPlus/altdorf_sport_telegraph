@@ -1,5 +1,5 @@
 [Unit]
-Description=Runs AST League Notifications every 2 minutes
+Description=Runs AST Hotline sending every 2 minutes
 
 [Timer]
 OnBootSec=5min
