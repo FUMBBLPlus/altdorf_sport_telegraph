@@ -12,6 +12,9 @@ import fumbbl_session as S
 import helper
 import renderer
 
+#rootpath = pathlib.Path('.')  # uncomment for jupyter
+rootpath = pathlib.Path(__file__).parent  # uncomment for script
+
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 WATCHING_NAME = '<font size=8><b>WATCHING</b></font><br/>'
 LIVE_NAME = '<font color=red size=6><b>LIVE</b></font><br/>'
@@ -21,8 +24,7 @@ AST_GROUP_ID = 11363
 DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
 DEFAULT_SUBJECT = 'AST Notification'
 MESSAGE_BODY_LIMIT = 50000
-
-rootpath = pathlib.Path(__file__).parent
+POSTPONE_TOLERANCE = datetime.timedelta(0, 900)
 
 with open(rootpath / 'login.json') as f:
     _login = json.load(f)
@@ -36,7 +38,10 @@ watching = json.loads(watching_text or '[]')
 fillers_text = S.tournament.get_settings(settings["group_id"], settings["fillers"])["comment"]
 fillers = set(json.loads(fillers_text or '[]'))
 live_text = S.tournament.get_settings(settings["group_id"], settings["live"])["comment"]
-live = set(tuple(sorted(team_ids)) for team_ids in json.loads(live_text or '[]'))
+live = {
+        tuple(sorted(team_ids)): datetime.datetime.strptime(last_time, TIME_FORMAT)
+        for team_ids, last_time in json.loads(live_text or '[]')
+}
 modified_text = S.tournament.get_settings(settings["group_id"], settings["modified"])["comment"]
 modified = {
         int(tournamentId): datetime.datetime.strptime(timestr, TIME_FORMAT) for tournamentId, timestr
@@ -103,8 +108,9 @@ for groupId, d in group_tournament.items():
                     status = 'FORFEITED'
             elif team_ids in current_matches and team_ids not in live:
                 status = 'LIVE'
-            elif team_ids not in current_matches and team_ids in live:
+            elif team_ids not in current_matches and team_ids in live and live[team_ids] + POSTPONE_TOLERANCE < now:
                 status = 'POSTPONED'
+                del live[team_ids]
             else:
                 continue
             pairing['status'] = status
@@ -247,7 +253,6 @@ for conversationId, conversation_elems in conversations.items():
                 to.remove('<TOURNAMENT>')
                 for tournamentId in tournamentIds:
                     to |= set(tournament_team_coaches[tournamentId].values())
-            to = ast_staff  # comment it to trigger the sending
             if str(conversationId).isdecimal():
                 S.message.invite(conversationId, to)
                 S.message.post(conversationId, message)
@@ -287,7 +292,9 @@ S.tournament.set_settings_data(
 )
 
 
-new_live_text = json.dumps([list(team_ids) for team_ids in current_matches])
+for team_ids in current_matches:
+    live[team_ids] = now.strftime(TIME_FORMAT)
+new_live_text = json.dumps([[list(team_ids), last_time] for team_ids, last_time in live.items()])
 directory = pathlib.Path(rootpath / 'live')
 if new_live_text != live_text or not directory.exists():
     directory.mkdir(parents=True, exist_ok=True)
