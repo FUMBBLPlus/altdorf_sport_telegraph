@@ -7,6 +7,8 @@ import json
 import math
 import pathlib
 
+import pytz
+
 import fumbbl_session as S
 
 import helper
@@ -15,6 +17,8 @@ import renderer
 #rootpath = pathlib.Path('.')  # uncomment for jupyter
 rootpath = pathlib.Path(__file__).parent  # uncomment for script
 
+ZONE = 'Europe/Stockholm'
+TZ = pytz.timezone(ZONE)
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 WATCHING_NAME = '<font size=8><b>WATCHING</b></font><br/>'
 LIVE_NAME = '<font color=red size=6><b>LIVE</b></font><br/>'
@@ -39,18 +43,18 @@ fillers_text = S.tournament.get_settings(settings["group_id"], settings["fillers
 fillers = set(json.loads(fillers_text or '[]'))
 live_text = S.tournament.get_settings(settings["group_id"], settings["live"])["comment"]
 live = {
-        tuple(sorted(team_ids)): datetime.datetime.strptime(last_time, TIME_FORMAT)
+        tuple(sorted(team_ids)): TZ.localize(datetime.datetime.strptime(last_time, TIME_FORMAT))
         for team_ids, last_time in json.loads(live_text or '[]')
 }
 modified_text = S.tournament.get_settings(settings["group_id"], settings["modified"])["comment"]
 modified = {
-        int(tournamentId): datetime.datetime.strptime(timestr, TIME_FORMAT) for tournamentId, timestr
+        int(tournamentId): TZ.localize(datetime.datetime.strptime(timestr, TIME_FORMAT)) for tournamentId, timestr
         in json.loads(modified_text or '{}').items()
 }
 
 ast_staff = {d["coach"] for d in S.group.get_members(AST_GROUP_ID) if 'Editor' in d["rosterName"]}
 
-now = datetime.datetime.now()
+now = datetime.datetime.now(TZ)
 
 tournament_schedule = helper.keydefaultdict(lambda tournamentId: S.tournament.get_schedule(tournamentId))
 
@@ -95,7 +99,7 @@ for groupId, d in group_tournament.items():
             p_modified = pairing.get('modified')
             if not p_modified:
                 continue
-            p_modified = datetime.datetime.strptime(p_modified, TIME_FORMAT)
+            p_modified = TZ.localize(datetime.datetime.strptime(p_modified, TIME_FORMAT))
             if p_modified <= last_modified:
                 continue
             team_ids = tuple(sorted(d3["id"] for d3 in pairing["teams"]))
@@ -106,11 +110,19 @@ for groupId, d in group_tournament.items():
                     status = 'FINISHED'
                 else:
                     status = 'FORFEITED'
+                if team_ids in live:
+                    del live[team_ids]
             elif team_ids in current_matches and team_ids not in live:
                 status = 'LIVE'
-            elif team_ids not in current_matches and team_ids in live and live[team_ids] + POSTPONE_TOLERANCE < now:
+            elif team_ids not in current_matches and team_ids in live:
                 status = 'POSTPONED'
-                del live[team_ids]
+                if live[team_ids] + POSTPONE_TOLERANCE < now:
+                    del live[team_ids]
+                elif now <= live[team_ids]:  # should never happen but if it does it causes an endless loop if unhandled
+                    del live[team_ids]
+                    continue
+                else:
+                    continue
             else:
                 continue
             pairing['status'] = status
