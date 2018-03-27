@@ -63,7 +63,7 @@ group = helper.keydefaultdict(lambda groupId: S.group.get(groupId))
 group_tournament = {}
 tournament_group = {}
 groupIds = set(d["groupId"] for d in watching if "groupId" in d)
-print(f'Groups: {"; ".join(sorted(groupIds))}')
+print(f'Groups: {"; ".join([str(i) for i in sorted(groupIds)])}')
 for groupId in groupIds:
     tournaments_ = {
             int(d2["id"]): d2 for d2 in S.group.get_tournaments(groupId)
@@ -82,7 +82,7 @@ inProgressTournamentIds = set(
     tournamentId for d in group_tournament.values() for tournamentId, d2 in d.items()
     if d2["status"] == 'In Progress'
 )
-print(f'Tournaments In Progress: {"; ".join(sorted(inProgressTournamentIds))}')
+print(f'Tournaments In Progress: {"; ".join([str(i) for i in sorted(inProgressTournamentIds)])}')
 
 group_team_coaches = helper.keydefaultdict(lambda groupId: {int(d['id']): d['coach'] for d in S.group.get_members(groupId)})
 
