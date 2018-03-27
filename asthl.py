@@ -96,7 +96,7 @@ for groupId, d in group_tournament.items():
     for tournamentId, d2 in d.items():
         d2['groupId'] = groupId
         schedule = d2['schedule'] = tournament_schedule[tournamentId]
-        new_modified = last_modified = modified.get(tournamentId, datetime.datetime.min)
+        new_modified = last_modified = modified.get(tournamentId, TZ.localize(datetime.datetime(1001, 1, 1, 0, 0)))
         for pairing in schedule:
             p_modified = pairing.get('modified')
             if not p_modified:
