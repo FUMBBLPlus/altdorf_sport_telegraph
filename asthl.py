@@ -307,8 +307,8 @@ S.tournament.set_settings_data(
 
 
 for team_ids in current_matches:
-    live[team_ids] = now.strftime(TIME_FORMAT)
-new_live_text = json.dumps([[list(team_ids), last_time] for team_ids, last_time in live.items()])
+    live[team_ids] = now
+new_live_text = json.dumps([[list(team_ids), last_time.strftime(TIME_FORMAT)] for team_ids, last_time in live.items()])
 directory = pathlib.Path(rootpath / 'live')
 if new_live_text != live_text or not directory.exists():
     directory.mkdir(parents=True, exist_ok=True)
