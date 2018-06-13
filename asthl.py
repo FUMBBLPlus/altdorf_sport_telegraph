@@ -187,7 +187,7 @@ for k in sorted(events):
             namespace["pairing"]["title"] = f'ROUND {namespace["pairing"]["round"]}'
         else:
             pairing_title_index = math.floor(math.log(namespace["pairing"]["position"], 2))
-            if (0 < pairing_title_index <= 2):
+            if (0 <= pairing_title_index <= 2):
                 namespace["pairing"]["title"] = ('FINAL', 'SEMIFINAL', 'QUARTERFINAL')[pairing_title_index]
             else:
                 namespace["pairing"]["title"] = f'ROUND OF {2**(pairing_title_index+1)}'
