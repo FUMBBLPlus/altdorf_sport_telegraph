@@ -8,7 +8,7 @@ FINISHED = '''[table width=100% bg=#E6DDC7][tr]\
 [table blackborder border2 width=100%]\
 [tr bg=#224422 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
-[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}]{tournament[name]}[/url][/b]
+[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
 [b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
@@ -36,7 +36,7 @@ FORFEITED = '''[table width=100% bg=#E6DDC7][tr]\
 [table blackborder border2 width=100%]\
 [tr bg=#F40606 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
-[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}]{tournament[name]}[/url][/b]
+[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
 [b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
@@ -61,7 +61,7 @@ LIVE = '''[table width=100% bg=#E6DDC7][tr]\
 [table blackborder border2 width=100%]\
 [tr bg=#2F1E39 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
-[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}]{tournament[name]}[/url][/b]
+[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
 [b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
@@ -88,7 +88,7 @@ POSTPONED = '''[table width=100% bg=#E6DDC7][tr]\
 [table blackborder border2 width=100%]\
 [tr bg=#A8A833 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
-[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}]{tournament[name]}[/url][/b]
+[b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
 [b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]

@@ -1,0 +1,26 @@
+[
+	{
+		"groupId": 9298,
+		"conversationId": 553611,
+		"conversationTo": [],
+		"renderer": "notv"
+	},
+	{
+		"groupId": 10455,
+		"conversationId": "cibblwinter",
+		"conversationSubject": "AST Hotline for CIBBL - Y4, Winter",
+		"conversationTo": [
+			"<GROUP>"
+		],
+		"renderer": "cibbl"
+	},
+	{
+		"groupId": 10837,
+		"conversationId": 559526,
+		"conversationSubject": "AST Hotline for BIBBL - Y3, Autumn",
+		"conversationTo": [
+			"<GROUP>"
+		],
+		"renderer": "cibbl"
+	}
+]

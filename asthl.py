@@ -28,7 +28,7 @@ AST_GROUP_ID = 11363
 DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
 DEFAULT_SUBJECT = 'AST Hotline'
 MESSAGE_BODY_LIMIT = 50000
-POSTPONE_TOLERANCE = datetime.timedelta(0, 900)
+POSTPONE_TOLERANCE = datetime.timedelta(seconds=900)  # 15 mins
 
 with open(rootpath / 'login.json') as f:
     _login = json.load(f)
@@ -52,7 +52,8 @@ modified = {
         in json.loads(modified_text or '{}').items()
 }
 
-ast_staff = {d["coach"] for d in S.group.get_members(AST_GROUP_ID) if 'Editor' in d["rosterName"]}
+subscribers = {d["coach"] for d in S.group.get_members(AST_GROUP_ID)}
+ast_staff = {'SzieberthAdam'}
 
 now = datetime.datetime.now(TZ)
 
@@ -98,6 +99,8 @@ for groupId, d in group_tournament.items():
         schedule = d2['schedule'] = tournament_schedule[tournamentId]
         new_modified = last_modified = modified.get(tournamentId, TZ.localize(datetime.datetime(1001, 1, 1, 0, 0)))
         for pairing in schedule:
+            pairing['groupId'] = groupId
+            pairing['tournamentId'] = tournamentId
             p_modified = pairing.get('modified')
             if not p_modified:
                 continue
@@ -118,7 +121,9 @@ for groupId, d in group_tournament.items():
                 status = 'LIVE'
             elif team_ids not in current_matches and team_ids in live:
                 status = 'POSTPONED'
-                if live[team_ids] + POSTPONE_TOLERANCE < now:
+                trigger_time = live[team_ids] + POSTPONE_TOLERANCE
+                print([status, trigger_time, now])  # debug
+                if trigger_time <= now:
                     del live[team_ids]
                 elif now <= live[team_ids]:  # should never happen but if it does it causes an endless loop if unhandled
                     del live[team_ids]
@@ -128,8 +133,6 @@ for groupId, d in group_tournament.items():
             else:
                 continue
             pairing['status'] = status
-            pairing['groupId'] = groupId
-            pairing['tournamentId'] = tournamentId
             new_modified = max(new_modified, p_modified)
             events[(p_modified, team_ids)] = pairing
         modified[tournamentId] = new_modified
@@ -257,6 +260,9 @@ for conversationId, conversation_elems in conversations.items():
             if '<AST>' in to:
                 to.remove('<AST>')
                 to |= ast_staff
+            if '<SUBSCRIBERS>' in to:
+                to.remove('<SUBSCRIBERS>')
+                to |= subscribers
             if '<GROUP>' in to:
                 groupIds = set(w["groupId"] for w in conversation_watching if w.get('groupId'))
                 to.remove('<GROUP>')
