@@ -105,10 +105,10 @@ for groupId, d in group_tournament.items():
             if not p_modified:
                 continue
             p_modified = TZ.localize(datetime.datetime.strptime(p_modified, TIME_FORMAT))
-            if p_modified <= last_modified:
-                continue
             team_ids = tuple(sorted(d3["id"] for d3 in pairing["teams"]))
             if set(team_ids) & fillers:
+                continue
+            if p_modified <= last_modified and team_ids not in live:
                 continue
             if pairing.get('result'):
                 if pairing["result"].get('id'):
