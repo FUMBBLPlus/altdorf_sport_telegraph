@@ -3,7 +3,7 @@ import re
 from renderer import default
 from renderer import noround
 
-EXTRA_STRIP = '⠀'
+EXTRA_STRIP = ' ⠀'
 
 def render(namespace):
   if "winter" in namespace["tournament"]["name"].lower():

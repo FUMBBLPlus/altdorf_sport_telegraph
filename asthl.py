@@ -23,7 +23,7 @@ TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 WATCHING_NAME = '<font size=8><b>WATCHING</b></font><br/>'
 LIVE_NAME = '<font color=red size=6><b>LIVE</b></font><br/>'
 MODIFIED_NAME = '<font color=red size=6><b>MODIFIED</b></font><br/>'
-EXTRA_STRIP = '⠀'
+EXTRA_STRIP = ' ⠀'
 AST_GROUP_ID = 11363
 DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
 DEFAULT_SUBJECT = 'AST Hotline'
