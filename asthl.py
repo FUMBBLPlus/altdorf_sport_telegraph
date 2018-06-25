@@ -202,6 +202,7 @@ for k in sorted(events):
         tournament_data = group_tournament[event["groupId"]][event["tournamentId"]]
         namespace["tournament"] = {'id': tournament_data["id"], 'name': tournament_data["name"]}
         namespace["tournament"]["name"] = w.get('tournamentName') or namespace["tournament"]["name"]
+        namespace["tournament"]["name"] = namespace["tournament"]["name"].strip(EXTRA_STRIP)
         if status == 'FINISHED':
             match_id = event2["result"]["id"]
             namespace["match"] = copy.deepcopy(match[match_id])
