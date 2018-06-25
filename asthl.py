@@ -192,7 +192,11 @@ for k in sorted(events):
             else:
                 namespace["pairing"]["title"] = f'ROUND OF {2**(pairing_title_index+1)}'
         namespace["status"] = status = event2["status"]
-        namespace["date"], namespace["time"] = event2["modified"].split()
+        if status == 'POSTPONED':
+            namespace["date"] = now.strftime("%y-%m-%d")
+            namespace["time"] = now.strftime("%H:%M:%S")
+        else:
+            namespace["date"], namespace["time"] = event2["modified"].split()
         team_ids = tuple(sorted(t["id"] for t in event["teams"]))
         winner = event2.get("result", {}).get("winner")
         tournament_data = group_tournament[event["groupId"]][event["tournamentId"]]
