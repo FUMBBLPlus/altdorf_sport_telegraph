@@ -6,6 +6,7 @@ import itertools
 import json
 import math
 import pathlib
+import sys
 
 import pytz
 
@@ -23,6 +24,7 @@ TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 WATCHING_NAME = '<font size=8><b>WATCHING</b></font><br/>'
 LIVE_NAME = '<font color=red size=6><b>LIVE</b></font><br/>'
 MODIFIED_NAME = '<font color=red size=6><b>MODIFIED</b></font><br/>'
+POSTPONED_NAME = '<font color=red size=6><b>POSTP</b></font><br/>'
 EXTRA_STRIP = ' ⠀'
 AST_GROUP_ID = 11363
 DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
@@ -37,6 +39,11 @@ S.log_in(**_login)
 with open(rootpath / 'settings.json') as f:
     settings = json.load(f)
 
+running_text = S.tournament.get_settings(settings["group_id"], settings["running"])["comment"]
+running = json.loads(running_text or 'false')
+if not running:
+    sys.exit()
+
 watching_text = S.tournament.get_settings(settings["group_id"], settings["watching"])["comment"]
 watching = json.loads(watching_text or '[]')
 fillers_text = S.tournament.get_settings(settings["group_id"], settings["fillers"])["comment"]
@@ -46,11 +53,15 @@ live = {
         tuple(sorted(team_ids)): TZ.localize(datetime.datetime.strptime(last_time, TIME_FORMAT))
         for team_ids, last_time in json.loads(live_text or '[]')
 }
+print("live", live)
 modified_text = S.tournament.get_settings(settings["group_id"], settings["modified"])["comment"]
 modified = {
         int(tournamentId): TZ.localize(datetime.datetime.strptime(timestr, TIME_FORMAT)) for tournamentId, timestr
         in json.loads(modified_text or '{}').items()
 }
+postponed_text = S.tournament.get_settings(settings["group_id"], settings["postponed"])["comment"]
+postponed = set(tuple(sorted(team_ids)) for team_ids in json.loads(postponed_text or '[]'))
+print("postponed", postponed)
 
 subscribers = {d["coach"] for d in S.group.get_members(AST_GROUP_ID)}
 ast_staff = {'SzieberthAdam'}
@@ -91,7 +102,7 @@ current_matches = {
         tuple(sorted(d2["id"] for d2 in d["teams"])): d
         for d in S.match.get_current() if d.get('tournament', {}).get('id') in tournamentIds
 }
-
+print("current matches", current_matches)
 events = {}
 for groupId, d in group_tournament.items():
     for tournamentId, d2 in d.items():
@@ -108,7 +119,7 @@ for groupId, d in group_tournament.items():
             team_ids = tuple(sorted(d3["id"] for d3 in pairing["teams"]))
             if set(team_ids) & fillers:
                 continue
-            if p_modified <= last_modified and team_ids not in live:
+            if p_modified <= last_modified and team_ids not in live and team_ids not in postponed:
                 continue
             if pairing.get('result'):
                 if pairing["result"].get('id'):
@@ -125,6 +136,7 @@ for groupId, d in group_tournament.items():
                 print([status, trigger_time, now])  # debug
                 if trigger_time <= now:
                     del live[team_ids]
+                    postponed.add(team_ids)
                 elif now <= live[team_ids]:  # should never happen but if it does it causes an endless loop if unhandled
                     del live[team_ids]
                     continue
@@ -132,6 +144,8 @@ for groupId, d in group_tournament.items():
                     continue
             else:
                 continue
+            if status != 'POSTPONED':
+                postponed -= {team_ids}
             pairing['status'] = status
             new_modified = max(new_modified, p_modified)
             events[(p_modified, team_ids)] = pairing
@@ -328,6 +342,13 @@ if new_live_text != live_text or not directory.exists():
 S.tournament.set_settings_data(
     {'name': LIVE_NAME, 'comment': new_live_text},
     settings["group_id"], settings["live"]
+)
+
+
+new_postponed_text = json.dumps(list(postponed))
+S.tournament.set_settings_data(
+    {'name': POSTPONED_NAME, 'comment': new_postponed_text},
+    settings["group_id"], settings["postponed"]
 )
 
 
