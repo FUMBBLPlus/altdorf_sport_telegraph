@@ -1,0 +1,20 @@
+[
+	{
+		"groupId": 10455,
+		"conversationId": "cibbl",
+		"conversationSubject": "AST Hotline for CIBBL - Year 4, Summer",
+		"conversationTo": [
+			"<GROUP>"
+		],
+		"renderer": "cibbl"
+	},
+	{
+		"groupId": 10837,
+		"conversationId": 571205,
+		"conversationSubject": "AST Hotline for BIBBL - Year 4, Spring",
+		"conversationTo": [
+			"<GROUP>"
+		],
+		"renderer": "cibbl"
+	}
+]
