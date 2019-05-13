@@ -136,6 +136,7 @@ for groupId, d in group_tournament.items():
                     status = 'REPORTED FINISHED'
                 elif match_id:
                     status = 'FINISHED'
+                    finished.add(match_id)
                     max_finished = max(max_finished, match_id)
                 else:
                     status = 'FORFEITED'
