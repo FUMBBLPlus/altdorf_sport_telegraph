@@ -8,6 +8,6 @@ def render(namespace):
   fstr = getattr(noroster, status)
   namespace["time"] = ':'.join(namespace["time"].split(':')[:2])
   for t in namespace["teams"]:
-    t["roster"]["name"] = t["roster"]["name"].strip(EXTRA_STRIP)
+    t["name"] = t["name"].strip(EXTRA_STRIP)
   return fstr.format(**namespace)
 
