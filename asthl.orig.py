@@ -25,14 +25,12 @@ WATCHING_NAME = '<font size=8><b>WATCHING</b></font><br/>'
 LIVE_NAME = '<font color=red size=6><b>LIVE</b></font><br/>'
 MODIFIED_NAME = '<font color=red size=6><b>MODIFIED</b></font><br/>'
 POSTPONED_NAME = '<font color=red size=6><b>POSTP</b></font><br/>'
-FINISHED_NAME = '<font color=red size=6><b>FINISHED</b></font><br/>'
 EXTRA_STRIP = ' ⠀'
 AST_GROUP_ID = 11363
 DEFAULT_TO = ('<GROUP>', '<TOURNAMENT>',)
 DEFAULT_SUBJECT = 'AST Hotline'
 MESSAGE_BODY_LIMIT = 50000
 POSTPONE_TOLERANCE = datetime.timedelta(seconds=900)  # 15 mins
-FINISHED_TOLERANCE = 100
 
 with open(rootpath / 'login.json') as f:
     _login = json.load(f)
@@ -64,13 +62,6 @@ modified = {
 postponed_text = S.tournament.get_settings(settings["group_id"], settings["postponed"])["comment"]
 postponed = set(tuple(sorted(team_ids)) for team_ids in json.loads(postponed_text or '[]'))
 print("postponed", postponed)
-
-finished_text = S.tournament.get_settings(settings["group_id"], settings["finished"])["comment"]
-finished = set(tuple(sorted(match_ids)) for match_ids in json.loads(finished_text or '[]'))
-print("finished", finished)
-
-max_finished = 0
-
 
 subscribers = {d["coach"] for d in S.group.get_members(AST_GROUP_ID)}
 ast_staff = {'SzieberthAdam'}
@@ -131,21 +122,12 @@ for groupId, d in group_tournament.items():
             if p_modified <= last_modified and team_ids not in live and team_ids not in postponed:
                 continue
             if pairing.get('result'):
-                match_id = pairing["result"].get('id')
-                if match_id and match_id in finished:
-                    status = 'REPORTED FINISHED'
-                elif match_id:
+                if pairing["result"].get('id'):
                     status = 'FINISHED'
-                    max_finished = max(max_finished, match_id)
                 else:
                     status = 'FORFEITED'
                 if team_ids in live:
-                    if p_modified < live[team_ids] - POSTPONE_TOLERANCE:
-                        # excluce former identical matchups in case of multiple in the same tournament
-                        continue
-                    else:
-                        # live match has been ended
-                        del live[team_ids]
+                    del live[team_ids]
             elif team_ids in current_matches and team_ids not in live:
                 status = 'LIVE'
             elif team_ids not in current_matches and team_ids in live:
@@ -224,8 +206,6 @@ for k in sorted(events):
             else:
                 namespace["pairing"]["title"] = f'ROUND OF {2**(pairing_title_index+1)}'
         namespace["status"] = status = event2["status"]
-        if status == 'REPORTED FINISHED':
-            continue
         if status == 'POSTPONED':
             namespace["date"] = now.strftime("%y-%m-%d")
             namespace["time"] = now.strftime("%H:%M:%S")
@@ -369,13 +349,6 @@ new_postponed_text = json.dumps(list(postponed))
 S.tournament.set_settings_data(
     {'name': POSTPONED_NAME, 'comment': new_postponed_text},
     settings["group_id"], settings["postponed"]
-)
-
-new_finished = sorted(match_id for match_id in finished if match_id + FINISHED_TOLERANCE <= (max_finished or 999999999))
-new_finished_text = json.dumps(new_finished)
-S.tournament.set_settings_data(
-    {'name': FINISHED_NAME, 'comment': new_finished_text},
-    settings["group_id"], settings["finished"]
 )
 
 

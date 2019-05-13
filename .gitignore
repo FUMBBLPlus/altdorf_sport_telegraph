@@ -1,5 +1,6 @@
 __pycache__/
 live/*
 modified/*
+watching/*
 .ipynb_checkpoints/
 login.json
