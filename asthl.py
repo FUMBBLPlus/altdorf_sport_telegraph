@@ -227,7 +227,7 @@ for k in sorted(events):
         if status == 'REPORTED FINISHED':
             continue
         if status == 'POSTPONED':
-            namespace["date"] = now.strftime("%y-%m-%d")
+            namespace["date"] = now.strftime("%Y-%m-%d")
             namespace["time"] = now.strftime("%H:%M:%S")
         else:
             namespace["date"], namespace["time"] = event2["modified"].split()

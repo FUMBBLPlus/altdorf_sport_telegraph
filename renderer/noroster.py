@@ -12,12 +12,13 @@ FINISHED = '''[table width=100% bg=#E6DDC7][tr]\
 [tr bg=#224422 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
 [b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
+[b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
-{teams[0][teamValue]} • [i]{teams[0][roster][name]}[/i]
+{teams[0][teamValue]}
 [url=/~{teams[0][coach][name]}]{teams[0][coach][shownname]}[/url][/block][/td][td width=10%][block=center]
 VS[/block][/td][td width=45%][url=/p/team?team_id={teams[1][id]}]{teams[1][name]}[/url]
-[i]{teams[1][roster][name]}[/i] • {teams[1][teamValue]}
+{teams[1][teamValue]}
 [url=/~{teams[1][coach][name]}]{teams[1][coach][shownname]}[/url][/td][/tr][/table]\
 [block position=relative][block position=absolute top=-16px left=498px][size=8][url=/p/group?op=view&group=11363]AST[/url][/size][/block][/block]
 [/td]\
@@ -39,12 +40,13 @@ FORFEITED = '''[table width=100% bg=#E6DDC7][tr]\
 [tr bg=#F40606 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
 [b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
+[b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
-{teams[0][teamValue]} • [i]{teams[0][roster][name]}[/i]
+{teams[0][teamValue]}
 [url=/~{teams[0][coach][name]}]{teams[0][coach][shownname]}[/url][/block][/td][td width=10%][block=center]
 VS[/block][/td][td width=45%][url=/p/team?team_id={teams[1][id]}]{teams[1][name]}[/url]
-[i]{teams[1][roster][name]}[/i] • {teams[1][teamValue]}
+{teams[1][teamValue]}
 [url=/~{teams[1][coach][name]}]{teams[1][coach][shownname]}[/url][/td][/tr][/table]\
 [block position=relative][block position=absolute top=-16px left=498px][size=8][url=/p/group?op=view&group=11363]AST[/url][/size][/block][/block]
 [/td]\
@@ -56,19 +58,20 @@ LIVE = '''[table width=100% bg=#E6DDC7][tr]\
 [td width=100px][block=right]\
 {date}
 {time}\
-[/block]\
+[/block]\[i]{teams[1][roster][name]}[/i] • 
 [/td]\
 [td width=534px]\
-[table blackborder border2 width=100%]\
+[table blackborder borde[i]{teams[1][roster][name]}[/i] • r2 width=100%]\
 [tr bg=#2F1E39 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
 [b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
+[b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
-{teams[0][teamValue]} • [i]{teams[0][roster][name]}[/i]
+{teams[0][teamValue]}
 [url=/~{teams[0][coach][name]}]{teams[0][coach][shownname]}[/url][/block][/td][td width=10%][block=center]
 VS[/block][/td][td width=45%][url=/p/team?team_id={teams[1][id]}]{teams[1][name]}[/url]
-[i]{teams[1][roster][name]}[/i] • {teams[1][teamValue]}
+{teams[1][teamValue]}
 [url=/~{teams[1][coach][name]}]{teams[1][coach][shownname]}[/url][/td][/tr][/table]\
 [block position=relative][block position=absolute top=-16px left=498px][size=8][url=/p/group?op=view&group=11363]AST[/url][/size][/block][/block]
 [/td]\
@@ -89,12 +92,13 @@ POSTPONED = '''[table width=100% bg=#E6DDC7][tr]\
 [tr bg=#A8A833 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
 [b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
+[b]{pairing[title]}[/b]\
 [/block][/td][/tr]\
 [tr][td width=45%][block=right][url=/p/team?team_id={teams[0][id]}]{teams[0][name]}[/url]
-{teams[0][teamValue]} • [i]{teams[0][roster][name]}[/i]
+{teams[0][teamValue]}
 [url=/~{teams[0][coach][name]}]{teams[0][coach][shownname]}[/url][/block][/td][td width=10%][block=center]
 VS[/block][/td][td width=45%][url=/p/team?team_id={teams[1][id]}]{teams[1][name]}[/url]
-[i]{teams[1][roster][name]}[/i] • {teams[1][teamValue]}
+{teams[1][teamValue]}
 [url=/~{teams[1][coach][name]}]{teams[1][coach][shownname]}[/url][/td][/tr][/table]\
 [block position=relative][block position=absolute top=-16px left=498px][size=8][url=/p/group?op=view&group=11363]AST[/url][/size][/block][/block]
 [/td]\

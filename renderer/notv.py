@@ -1,3 +1,6 @@
+from renderer.default import render
+
+
 FINISHED = '''[table width=100% bg=#E6DDC7][tr]\
 [td width=100px][block=right]\
 {date}
@@ -101,11 +104,3 @@ VS[/block][/td][td width=45%][url=/p/team?team_id={teams[1][id]}]{teams[1][name]
 [/td]\
 [td][/td]\
 [/tr][/table]'''
-
-
-def render(namespace):
-  status = namespace['status'].upper()
-  fstr = globals()[status]
-  namespace["time"] = ':'.join(namespace["time"].split(':')[:2])
-  return fstr.format(**namespace)
-
