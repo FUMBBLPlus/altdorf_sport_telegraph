@@ -58,10 +58,10 @@ LIVE = '''[table width=100% bg=#E6DDC7][tr]\
 [td width=100px][block=right]\
 {date}
 {time}\
-[/block]\[i]{teams[1][roster][name]}[/i] • 
+[/block]\
 [/td]\
 [td width=534px]\
-[table blackborder borde[i]{teams[1][roster][name]}[/i] • r2 width=100%]\
+[table blackborder border2 width=100%]\
 [tr bg=#2F1E39 fg=#fff][td colspan=3][block=center]{status}[/block][/td][/tr]\
 [tr][td colspan=3][block=center]\
 [b][url=/FUMBBL.php?page=group&op=view&group={groupId}&p=tournaments&showallrounds=1&show={tournament[id]}&at=1]{tournament[name]}[/url][/b]
