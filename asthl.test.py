@@ -69,7 +69,7 @@ finished_text = S.tournament.get_settings(settings["group_id"], settings["finish
 finished = set(tuple(sorted(match_ids)) for match_ids in json.loads(finished_text or '[]'))
 print("finished", finished)
 
-max_finished = 0
+max_finished = (max(finished) if finished else 0)
 
 
 subscribers = {d["coach"] for d in S.group.get_members(AST_GROUP_ID)}
