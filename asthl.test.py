@@ -373,7 +373,7 @@ S.tournament.set_settings_data(
 )
 
 if max_finished:
-    new_finished = sorted(match_id for match_id in finished if max_finished + FINISHED_TOLERANCE <= match_id)
+    new_finished = sorted(match_id for match_id in finished if max_finished <= match_id + FINISHED_TOLERANCE)
     new_finished_text = json.dumps(new_finished)
     S.tournament.set_settings_data(
         {'name': FINISHED_NAME, 'comment': new_finished_text},
