@@ -372,12 +372,13 @@ S.tournament.set_settings_data(
     settings["group_id"], settings["postponed"]
 )
 
-new_finished = sorted(match_id for match_id in finished if match_id + FINISHED_TOLERANCE <= (max_finished or 999999999))
-new_finished_text = json.dumps(new_finished)
-S.tournament.set_settings_data(
-    {'name': FINISHED_NAME, 'comment': new_finished_text},
-    settings["group_id"], settings["finished"]
-)
+if max_finished:
+    new_finished = sorted(match_id for match_id in finished if max_finished + FINISHED_TOLERANCE <= match_id)
+    new_finished_text = json.dumps(new_finished)
+    S.tournament.set_settings_data(
+        {'name': FINISHED_NAME, 'comment': new_finished_text},
+        settings["group_id"], settings["finished"]
+    )
 
 
 new_modified_text = json.dumps({
