@@ -66,7 +66,7 @@ postponed = set(tuple(sorted(team_ids)) for team_ids in json.loads(postponed_tex
 print("postponed", postponed)
 
 finished_text = S.tournament.get_settings(settings["group_id"], settings["finished"])["comment"]
-finished = set(tuple(sorted(match_ids)) for match_ids in json.loads(finished_text or '[]'))
+finished = set(json.loads(finished_text or '[]'))
 print("finished", finished)
 
 max_finished = (max(finished) if finished else 0)
